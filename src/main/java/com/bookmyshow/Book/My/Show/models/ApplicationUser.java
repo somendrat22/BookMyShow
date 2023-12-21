@@ -24,7 +24,7 @@ public class ApplicationUser {
     @Column(unique = true)
     long phoneNumber;
     String password;
-    String type; // movieOwners, HallOwners and RegularUser
+    String type; // movieOwners, HallOwners and RegularUserServce
     int age;
     @OneToMany(mappedBy = "user")
     List<Ticket> tickets;
