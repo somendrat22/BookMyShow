@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
+
 @Service
 public class MovieService {
 
@@ -34,5 +36,9 @@ public class MovieService {
             movieRepository.save(movie);
         }
         return movieOwners;
+    }
+
+    public Movie getMovieById(UUID id){
+        return movieRepository.findById(id).orElse(null);
     }
 }

@@ -1,6 +1,7 @@
 package com.bookmyshow.Book.My.Show.controller;
 
 import com.bookmyshow.Book.My.Show.dto.request.AddScreenDTO;
+import com.bookmyshow.Book.My.Show.dto.request.AddShowDTO;
 import com.bookmyshow.Book.My.Show.dto.request.HallOwnerSignUpDTO;
 import com.bookmyshow.Book.My.Show.dto.request.RegularUserSignupDTO;
 import com.bookmyshow.Book.My.Show.dto.response.GeneralMessageDTO;
@@ -8,6 +9,7 @@ import com.bookmyshow.Book.My.Show.exceptions.ResourceNotExistException;
 import com.bookmyshow.Book.My.Show.exceptions.UnAuthorized;
 import com.bookmyshow.Book.My.Show.exceptions.UserDoesNotExistException;
 import com.bookmyshow.Book.My.Show.models.ApplicationUser;
+import com.bookmyshow.Book.My.Show.models.Show;
 import com.bookmyshow.Book.My.Show.service.HallService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,6 +40,20 @@ public class HallController {
             return new ResponseEntity(new GeneralMessageDTO(e.getMessage()),HttpStatus.NOT_FOUND); // 404
         }
         return new ResponseEntity(new GeneralMessageDTO("Screens added successfully"), HttpStatus.CREATED); // 201
+    }
+
+    @PostMapping("/addshow")
+    public ResponseEntity addShow(@RequestBody AddShowDTO addShowDTO, @RequestParam String email){
+        try{
+            Show show = hallService.createShows(addShowDTO, email);
+            return new ResponseEntity(show,HttpStatus.CREATED);
+        }catch (UserDoesNotExistException e){
+            return new ResponseEntity(new GeneralMessageDTO(e.getMessage()), HttpStatus.NOT_FOUND); // 404
+        }catch(UnAuthorized e){
+            return new ResponseEntity(new GeneralMessageDTO(e.getMessage()), HttpStatus.UNAUTHORIZED); //401
+        }catch (ResourceNotExistException e){
+            return new ResponseEntity(new GeneralMessageDTO(e.getMessage()),HttpStatus.NOT_FOUND); // 404
+        }
     }
 
 
