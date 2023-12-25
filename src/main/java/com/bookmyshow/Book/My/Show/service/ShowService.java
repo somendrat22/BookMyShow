@@ -21,4 +21,11 @@ public class ShowService {
         return showRepository.getShowByMovieID(movieId);
     }
 
+    public List<Show> getShowByHallId(UUID hallID){
+        return showRepository.getShowByHallId(hallID);
+    }
+
+    public List<Show> getShowByHallIDAndMovieId(UUID hallId, UUID movieId){
+        return showRepository.getShowByHallIDAndMovieId(hallId, movieId);
+    }
 }

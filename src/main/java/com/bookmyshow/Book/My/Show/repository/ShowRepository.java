@@ -12,4 +12,9 @@ public interface ShowRepository extends JpaRepository<Show, UUID> {
 
     @Query(value = "select * from show where movie_id=:id", nativeQuery = true)
     public List<Show> getShowByMovieID(UUID id);
+    @Query(value = "select * from show where hall_id=:id", nativeQuery = true)
+    public List<Show> getShowByHallId(UUID id);
+
+    @Query(value = "select * from show where hall_id=:hallId and movie_id=:movieId", nativeQuery = true)
+    public List<Show> getShowByHallIDAndMovieId(UUID hallId, UUID movieId);
 }
