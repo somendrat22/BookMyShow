@@ -30,6 +30,9 @@ public class TicketService {
 
     @Autowired
     MailService mailService;
+
+    @Autowired
+    BarCodeGeberationService barCodeGeberationService;
     public Ticket buyTicket(String email, UUID showId){
         // 1. Get user by emailId;
         ApplicationUser user = applicationUserRepository.findByEmail(email);
@@ -71,7 +74,15 @@ public class TicketService {
                 "Accio Booking Application", user.getName(), movie.getName(), hall.getName(), hall.getAddress(), show.getStartTime().toString(), show.getTicketPrice());
 
         String userSub = String.format("Congratulations!! %s your ticket got generated !!", user.getName());
-        mailService.generateMail(user.getEmail(),userSub, userMessage);
+        try{
+            barCodeGeberationService.generateQR(userMessage);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+
+        mailService.generateMail(user.getEmail(),userSub, userMessage,"./src/main/resources/static/QRcode.png");
 
         int totalTickets = movieService.getTotalTicketCount(movie);
         int totalIncome = movieService.getBoxOfficeCollection(movie);
