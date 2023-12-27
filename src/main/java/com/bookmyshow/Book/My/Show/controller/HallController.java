@@ -9,13 +9,22 @@ import com.bookmyshow.Book.My.Show.exceptions.ResourceNotExistException;
 import com.bookmyshow.Book.My.Show.exceptions.UnAuthorized;
 import com.bookmyshow.Book.My.Show.exceptions.UserDoesNotExistException;
 import com.bookmyshow.Book.My.Show.models.ApplicationUser;
+import com.bookmyshow.Book.My.Show.models.Screen;
 import com.bookmyshow.Book.My.Show.models.Show;
 import com.bookmyshow.Book.My.Show.service.HallService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "Hall API", description = "This controller contains all the hall related service endpoint details")
 @RestController
 @RequestMapping("/hall")
 public class HallController {
@@ -28,8 +37,20 @@ public class HallController {
         return new ResponseEntity(user, HttpStatus.CREATED);
     }
 
+    @Operation(
+            summary = "This endpoint enables hall owner such that hall owners can add screens to their respective halls",
+            description = "This endpoint enables hall owner such that hall owners can add screens to their respective halls",
+            tags = {"tutorials", "post"}
+    )
+
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Screen got added successfully in the respective hall", content = {@Content(schema = @Schema(implementation = Screen.class), mediaType = "Application/json")}),
+            @ApiResponse(responseCode = "404", description = "User does not exist", content = {@Content(schema = @Schema(implementation = GeneralMessageDTO.class), mediaType = "Application/json")}),
+            @ApiResponse(responseCode = "404", description = "Resource Not Found Exception", content = {@Content(schema = @Schema(implementation = GeneralMessageDTO.class), mediaType = "Application/json")}),
+            @ApiResponse(responseCode = "401", description = "User is not authorized to add screens into hall", content = {@Content(schema = @Schema(implementation = GeneralMessageDTO.class), mediaType = "Application/json")})
+    })
     @PostMapping("/addscreen")
-    public ResponseEntity addScreen(@RequestBody AddScreenDTO addScreenDTO, @RequestParam String email){
+    public ResponseEntity addScreen(@RequestBody AddScreenDTO addScreenDTO,@Parameter(description = "Here you need to pass hall owner email") @RequestParam String email){
         try{
             hallService.addScreens(addScreenDTO, email);
         }catch (UserDoesNotExistException e){

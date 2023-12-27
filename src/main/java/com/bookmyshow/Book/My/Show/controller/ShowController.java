@@ -2,6 +2,8 @@ package com.bookmyshow.Book.My.Show.controller;
 
 import com.bookmyshow.Book.My.Show.models.Show;
 import com.bookmyshow.Book.My.Show.service.ShowService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,8 +20,13 @@ public class ShowController {
     @Autowired
     ShowService showService;
 
+    @Parameters({
+            @Parameter(name = "movieId", description = "It accepts only UUID", required = true),
+            @Parameter(name = "hallId", description = "It accepts only UUID")
+    })
+
     @GetMapping("/search")
-    public ResponseEntity searchShowByMovieId(@RequestParam(required = false) UUID movieId,  @RequestParam(required = false) UUID hallId){
+    public ResponseEntity searchShowByMovieId(@RequestParam(required = false, defaultValue = "21072a55-5394-43bb-8f1b-9a36cf396563") UUID movieId,  @RequestParam(required = false, defaultValue = "21072a55-5394-43bb-8f1b-9a36cf396563") UUID hallId){
 
         if(movieId != null && hallId != null){
             // search for both movieId and hallId
